@@ -2,8 +2,18 @@ h1 {
     text-align: center;
 }
 
-input {
+input:not(#file-input) {
     width: 50px;
     height: 20px;
     text-align: center;
 }
+
+button {
+    margin-right: 5px;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+}
+

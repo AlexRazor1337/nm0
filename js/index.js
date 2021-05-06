@@ -1,10 +1,10 @@
-let A = [
-    [2, 1, 1],
-    [1, -1, 0],
-    [3, -1, 2]
-];
+// let A = [
+//     [2, 1, 1],
+//     [1, -1, 0],
+//     [3, -1, 2]
+// ];
 
-let B = [2, -2, 2];
+// let B = [2, -2, 2];
 
 // let A = [
 //     [2, 5, 4],
@@ -243,51 +243,71 @@ function check_solution(A, B, X, E = 0.001) {
     return true;
 }
 
-function solve(A, B) {
+function solve(A, B, method) {
     if (det(A) == 0) {
         console.error("Matrix is invertible!");
+        return false;
     }
 
-    console.log("Cramer", Cramer(cpy(A), cpy(B)));
-    if (!is_zeros_on_main_diagonal(A)) {
-        console.log("Gauss", Gauss(cpy(A), cpy(B)));
-    } else {
-        console.error("Can't do it with Gauss!");
+    let X = false;
+    switch (method) {
+        case 1:
+            if (A.length < 5) {
+                X = Cramer(cpy(A), cpy(B));
+            } else {
+                alert("Matrix is too big!");
+            }
+            break;
+        case 2:
+            if (!is_zeros_on_main_diagonal(A)) {
+                X = Gauss(cpy(A), cpy(B));
+            } else {
+                alert("Can't do it with Gauss!");
+            }
+            break;
+        case 3:
+            if (is_diagonally_dominant(A)) {
+                X = Seidel(cpy(A), cpy(B));
+            } else {
+                alert("Can't do it with Seidel!");
+            }
+            break;
+        case 4:
+            if (!is_zeros_on_main_diagonal(A)) {
+                X = Gauss_Jordan(cpy(A), cpy(B));
+            } else {
+                alert("Can't do it with Gauss!");
+            }
+            break;
+        case 5:
+            if (!is_zeros_on_main_diagonal(A) && is_diagonally_dominant(A)) {
+                X = Jacobi(cpy(A), cpy(B));
+            } else {
+                alert("Can't do it with Jacobi!");
+            }
+        default:
+            break;
     }
 
-    if (is_diagonally_dominant(A)) {
-        console.log("Seidel", Seidel(cpy(A), cpy(B)));
-    } else {
-        console.error("Can't do it with Seidel!");
-    }
-
-    if (!is_zeros_on_main_diagonal(A)) {
-        console.log("Gauss_Jordan", Gauss_Jordan(cpy(A), cpy(B)));
-    } else {
-        console.error("Can't do it with Gauss!");
-    }
-
-    if (!is_zeros_on_main_diagonal(A) && is_diagonally_dominant(A)) {
-        console.log("Jacobi", Jacobi(cpy(A), cpy(B)));
-    } else {
-        console.error("Can't do it with Jacobi, zeros on the main diagonal!");
-    }
-
-    console.log(check_solution(A, B, Cramer(cpy(A), cpy(B))))
+    return X;
 }
 
 
 
-function createInput(dim) {
+function createInput(dim, A = null, B = null) {
     if (document.getElementById('inp')) {
         document.getElementById('inp').remove()
     }
+
     let tbl = document.createElement('table');
     for (let i = 0; i < dim; i++) {
         let row = document.createElement('tr');
         for (let j = 0; j < dim; j++) {
             let cell = document.createElement('td');
             let inp = document.createElement('input');
+            if (A) {
+                inp.value = A[i][j];
+            }
             inp.id = i + "-" + j
             inp.type = "number"
             let lab = document.createElement('label');
@@ -305,6 +325,9 @@ function createInput(dim) {
         let inp = document.createElement('input');
         inp.id = i + "B"
         inp.type = "number"
+        if (B) {
+            inp.value = B[i];
+        }
         let lab = document.createElement('label');
         lab.innerText = " = "
         cell.appendChild(lab);
@@ -318,8 +341,75 @@ function createInput(dim) {
     document.getElementById('container').appendChild(tbl)
 }
 
+function solver(A, B, dim) {
+    let X = solve(A, B, parseInt(document.getElementById('2').value));
+    if (X) {
+        let ans = document.createElement('p');
+        ans.innerText = "Корни СЛАУ: "
+        for (let i = 0; i < dim; i++) {
+            console.log(i, X[i])
+            ans.innerText += 'x' + (i + 1) + " = " + X[i];
+            if (i < dim - 1) {
+                ans.innerText += ',  ';
+            }
+        }
+
+        document.getElementById('outter_container').appendChild(ans)
+        let ch = document.createElement('p');
+        ch.innerText = "Проверить решение?";
+        ch.id = 'check?'
+        document.getElementById('outter_container').appendChild(ch)
+        let y = document.createElement('button');
+        y.id = "y";
+        y.onclick = function() {
+            document.getElementById('container').remove()
+            document.getElementById('solve').remove()
+            document.getElementById('check?').remove()
+            document.getElementById('y').remove()
+            document.getElementById('n').remove()
+            if (check_solution(A, B, X)) {
+                let tr = document.createElement('p');
+                tr.innerText = "Решение верное!"
+                document.getElementById('outter_container').appendChild(tr)
+            }
+            for (let i = 0; i < dim; i++) {
+                let chp = document.createElement('p');
+                for (let j = 0; j < dim; j++) {
+                    chp.innerText += A[i][j] + " * " + X[j];
+                    if (j < dim - 1) {
+                        chp.innerText += " + "
+                    }
+
+                }
+                chp.innerText += " = " + B[i]
+                document.getElementById('outter_container').appendChild(chp)
+            }
+            document.getElementById('outter_container')
+        }
+        y.innerText = 'Да';
+
+        let n = document.createElement('button');
+        n.id = "n"
+        n.onclick = function() {
+            location.reload();
+        }
+        n.innerText = 'Нет';
+
+        document.getElementById('outter_container').appendChild(y);
+        document.getElementById('outter_container').appendChild(n);
+    }
+}
 
 window.addEventListener('DOMContentLoaded', (event) => {
+        let A = [
+        [2, 1, 1],
+        [1, -1, 0],
+        [3, -1, 2]
+    ];
+
+    let B = [2, -2, 2];
+    console.log(JSON.stringify([A, B]))
+
     for (let i = 2; i <= 16; i++) {
         let opt = document.createElement('option');
         opt.id = "opt_" + i;
@@ -333,26 +423,41 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
     document.getElementById('solve').onclick = function() {
-        let dim = document.getElementById('1').value;
-        let A = new Array(dim);
-        let B = new Array(dim);
+        let A, B, dim;
+        if (document.getElementById('file-input').files && document.getElementById('file-input').files[0]) {
+            var reader = new FileReader();
+            reader.readAsText(document.getElementById('file-input').files[0]);
 
-        for (let i = 0; i < dim; i++) {
-            A[i] = new Array(A.dim);
-            for (let j = 0; j < dim; j++) {
-                let val = document.getElementById(i + "-" + j).value;
-                if (val == "") break;
+            reader.onload = function(e) {
+                var contents = JSON.parse(e.target.result);
 
-                A[i][j] = parseInt(val);
+                A = contents[0];
+                B = contents[1];
+                dim = A.length;
+                createInput(dim, A, B)
+                solver(A, B, dim)
+            };
+        } else {
+            dim = parseInt(document.getElementById('1').value);
+            A = new Array(dim);
+            B = new Array(dim);
+
+            for (let i = 0; i < dim; i++) {
+                A[i] = new Array(A.dim);
+                for (let j = 0; j < dim; j++) {
+                    let val = document.getElementById(i + "-" + j).value;
+                    if (val == "") return;
+
+                    A[i][j] = parseInt(val);
+                }
+
+                let val = document.getElementById(i + "B").value;
+                if (val == "") return;
+
+                B[i] = parseInt(val);
             }
-
-            let val = document.getElementById(i + "B").value;
-            if (val == "") break;
-
-            B[i] = parseInt(val);
+            solver(A, B, dim)
         }
-
-        solve(A, B);
     }
 });
 // solve(A, B);

@@ -10,24 +10,31 @@
 <body>
     <script src="js/index.js"></script>
     <h1>Решение СЛАУ</h1>
-    <div id="container">
-        <label for="1">Выберите размерность: </label>
-        <select name="dim" id="1">
-        </select>
-        <br>
-        <br>
-        <label for="2">Выберите метод: </label>
-        <select name="method" id="2">
-            <option value="1">Метод Крамера</option>
-            <option value="2">Метод Гаусса</option>
-            <option value="3">Метод Зейделя</option>
-            <option value="4">Метод Гаусса-Жордана</option>
-            <option value="5">Метод Якоби</option>
-        </select>
-        <br>
-        <p>Введите СЛАУ:</p>
-    </div>
     <br>
-    <button id='solve'>Решить систему уравнений</button>
+    <div id="wrapper">
+        <div id="outter_container">
+            <div id="container">
+                <label for="1">Выберите размерность: </label>
+                <select name="dim" id="1">
+                </select>
+                <br>
+                <br>
+                <label for="2">Выберите метод: </label>
+                <select name="method" id="2">
+                    <option value="1">Метод Крамера</option>
+                    <option value="2">Метод Гаусса</option>
+                    <option value="3">Метод Зейделя</option>
+                    <option value="4">Метод Гаусса-Жордана</option>
+                    <option value="5">Метод Якоби</option>
+                </select>
+                <br>
+                <p>Ввести с файла?</p>
+                <input type="file" id="file-input"/>
+                <p>Введите СЛАУ:</p>
+            </div>
+            <br>
+            <button id='solve'>Решить систему уравнений</button>
+        </div>
+    </div>
 </body>
 </html>
