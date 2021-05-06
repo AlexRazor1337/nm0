@@ -1,26 +1,3 @@
-// let A = [
-//     [2, 1, 1],
-//     [1, -1, 0],
-//     [3, -1, 2]
-// ];
-
-// let B = [2, -2, 2];
-
-// let A = [
-//     [2, 5, 4],
-//     [1, 3, 2],
-//     [2, 10, 9]
-// ];
-
-// let B = [30, 150, 110];
-
-// let A = [
-//     [1, 1, 1],
-//     [4, 2, 1],
-//     [9, 3, 1]
-// ];
-
-// let B = [0, 1, 3];
 
 function cpy(obj) {
     return JSON.parse(JSON.stringify(obj))
@@ -245,7 +222,7 @@ function check_solution(A, B, X, E = 0.001) {
 
 function solve(A, B, method) {
     if (det(A) == 0) {
-        console.error("Matrix is invertible!");
+        alert("Матрица вырожденная!");
         return false;
     }
 
@@ -255,35 +232,35 @@ function solve(A, B, method) {
             if (A.length < 5) {
                 X = Cramer(cpy(A), cpy(B));
             } else {
-                alert("Matrix is too big!");
+                alert("Слишком большая матрица для этого метода!");
             }
             break;
         case 2:
             if (!is_zeros_on_main_diagonal(A)) {
                 X = Gauss(cpy(A), cpy(B));
             } else {
-                alert("Can't do it with Gauss!");
+                alert("Нули на главной диагонали!");
             }
             break;
         case 3:
             if (is_diagonally_dominant(A)) {
                 X = Seidel(cpy(A), cpy(B));
             } else {
-                alert("Can't do it with Seidel!");
+                alert("Невозможно решить Зейделем!");
             }
             break;
         case 4:
             if (!is_zeros_on_main_diagonal(A)) {
                 X = Gauss_Jordan(cpy(A), cpy(B));
             } else {
-                alert("Can't do it with Gauss!");
+                alert("Нули на главной диагонали!");
             }
             break;
         case 5:
             if (!is_zeros_on_main_diagonal(A) && is_diagonally_dominant(A)) {
                 X = Jacobi(cpy(A), cpy(B));
             } else {
-                alert("Can't do it with Jacobi!");
+                alert("Невозможно использовать метод Якоби!");
             }
         default:
             break;
@@ -347,7 +324,6 @@ function solver(A, B, dim) {
         let ans = document.createElement('p');
         ans.innerText = "Корни СЛАУ: "
         for (let i = 0; i < dim; i++) {
-            console.log(i, X[i])
             ans.innerText += 'x' + (i + 1) + " = " + X[i];
             if (i < dim - 1) {
                 ans.innerText += ',  ';
@@ -401,15 +377,6 @@ function solver(A, B, dim) {
 }
 
 window.addEventListener('DOMContentLoaded', (event) => {
-        let A = [
-        [2, 1, 1],
-        [1, -1, 0],
-        [3, -1, 2]
-    ];
-
-    let B = [2, -2, 2];
-    console.log(JSON.stringify([A, B]))
-
     for (let i = 2; i <= 16; i++) {
         let opt = document.createElement('option');
         opt.id = "opt_" + i;
