@@ -1,3 +1,7 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 h1 {
     text-align: center;
 }
@@ -17,3 +21,8 @@ button {
     justify-content: center;
 }
 
+#outter_container {
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 10px;
+}

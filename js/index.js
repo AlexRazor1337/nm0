@@ -80,7 +80,7 @@ function Cramer(A, B) { // TODO проверить сходимость, раз�
     return X;
 }
 
-function Gauss(A, B) { //TODO Переделать, добавить прове https://www.codesansar.com/numerical-methods/gauss-elimination-method-pseudocode.htm
+function Gauss(A, B) {
     let X = new Array(A.length);
     let combined = new Array(A.length);
     for (let i = 0; i < A.length; i++) {
@@ -113,7 +113,7 @@ function Gauss(A, B) { //TODO Переделать, добавить прове 
 
 
 
-function Seidel(A, B, q = 0.001) { // TODO Добавить счетчик итераций?
+function Seidel(A, B, q = 0.001) {
     let X = new Array(A.length).fill(0);
     while (true) {
         let old_X = cpy(X);
@@ -142,7 +142,7 @@ function Seidel(A, B, q = 0.001) { // TODO Добавить счетчик ит�
     }
 }
 
-function Gauss_Jordan(A, B) { // TODO Переделать https://www.codesansar.com/numerical-methods/gauss-jordan-method-pseudocode.htm#
+function Gauss_Jordan(A, B) {
     let X = new Array(A.length);
     let combined = new Array(A.length);
     for (let i = 0; i < A.length; i++) {
@@ -174,7 +174,7 @@ function Gauss_Jordan(A, B) { // TODO Переделать https://www.codesansa
     return X;
 }
 
-function Jacobi(A, B, q = 0.001) { // TODO Добавить счетчик итераций?
+function Jacobi(A, B, q = 0.001) {
     let X = new Array(A.length).fill(0);
     let iter = 0;
     while (iter < 1000) {
@@ -322,6 +322,13 @@ function solver(A, B, dim) {
     let X = solve(A, B, parseInt(document.getElementById('2').value));
     if (X) {
         let ans = document.createElement('p');
+        if (document.getElementById("ans_sl")) {
+            document.getElementById("ans_sl").remove()
+            document.getElementById('check?').remove()
+            document.getElementById('y').remove()
+            document.getElementById('n').remove()
+        }
+        ans.id = "ans_sl"
         ans.innerText = "Корни СЛАУ: "
         for (let i = 0; i < dim; i++) {
             ans.innerText += 'x' + (i + 1) + " = " + X[i];
@@ -427,4 +434,3 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 });
-// solve(A, B);
